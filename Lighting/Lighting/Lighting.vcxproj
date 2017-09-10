@@ -117,7 +117,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\OpenglLib\src\glad.c" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="Lighting.cpp" />
   </ItemGroup>
   <ItemGroup>
