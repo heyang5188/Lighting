@@ -13,18 +13,17 @@ class Shader
 {
 public:
 	unsigned int ID;
-	// constructor generates the shader on the fly
-	// ------------------------------------------------------------------------
+	
 	Shader(const char* vertexPath, const char* fragmentPath, const char* geometryPath = nullptr)
 	{
-		// 1. retrieve the vertex/fragment source code from filePath
+	
 		std::string vertexCode;
 		std::string fragmentCode;
 		std::string geometryCode;
 		std::ifstream vShaderFile;
 		std::ifstream fShaderFile;
 		std::ifstream gShaderFile;
-		// ensure ifstream objects can throw exceptions:
+		
 		vShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		fShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
 		gShaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
@@ -59,21 +58,21 @@ public:
 		}
 		const char* vShaderCode = vertexCode.c_str();
 		const char* fShaderCode = fragmentCode.c_str();
-		// 2. compile shaders
+	
 		unsigned int vertex, fragment;
 		int success;
 		char infoLog[512];
-		// vertex shader
+
 		vertex = glCreateShader(GL_VERTEX_SHADER);
 		glShaderSource(vertex, 1, &vShaderCode, NULL);
 		glCompileShader(vertex);
 		checkCompileErrors(vertex, "VERTEX");
-		// fragment Shader
+	
 		fragment = glCreateShader(GL_FRAGMENT_SHADER);
 		glShaderSource(fragment, 1, &fShaderCode, NULL);
 		glCompileShader(fragment);
 		checkCompileErrors(fragment, "FRAGMENT");
-		// if geometry shader is given, compile geometry shader
+	
 		unsigned int geometry;
 		if (geometryPath != nullptr)
 		{
@@ -83,7 +82,7 @@ public:
 			glCompileShader(geometry);
 			checkCompileErrors(geometry, "GEOMETRY");
 		}
-		// shader Program
+		
 		ID = glCreateProgram();
 		glAttachShader(ID, vertex);
 		glAttachShader(ID, fragment);
@@ -91,36 +90,33 @@ public:
 			glAttachShader(ID, geometry);
 		glLinkProgram(ID);
 		checkCompileErrors(ID, "PROGRAM");
-		// delete the shaders as they're linked into our program now and no longer necessery
+		
 		glDeleteShader(vertex);
 		glDeleteShader(fragment);
 		if (geometryPath != nullptr)
 			glDeleteShader(geometry);
 
 	}
-	// activate the shader
-	// ------------------------------------------------------------------------
+	
 	void use()
 	{
 		glUseProgram(ID);
 	}
-	// utility uniform functions
-	// ------------------------------------------------------------------------
+	
 	void setBool(const std::string &name, bool value) const
 	{
 		glUniform1i(glGetUniformLocation(ID, name.c_str()), (int)value);
 	}
-	// ------------------------------------------------------------------------
+	
 	void setInt(const std::string &name, int value) const
 	{
 		glUniform1i(glGetUniformLocation(ID, name.c_str()), value);
 	}
-	// ------------------------------------------------------------------------
-	void setFloat(const std::string &name, float value) const
+	
 	{
 		glUniform1f(glGetUniformLocation(ID, name.c_str()), value);
 	}
-	// ------------------------------------------------------------------------
+	
 	void setVec2(const std::string &name, const glm::vec2 &value) const
 	{
 		glUniform2fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
@@ -129,7 +125,7 @@ public:
 	{
 		glUniform2f(glGetUniformLocation(ID, name.c_str()), x, y);
 	}
-	// ------------------------------------------------------------------------
+	
 	void setVec3(const std::string &name, const glm::vec3 &value) const
 	{
 		glUniform3fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
@@ -138,7 +134,7 @@ public:
 	{
 		glUniform3f(glGetUniformLocation(ID, name.c_str()), x, y, z);
 	}
-	// ------------------------------------------------------------------------
+	
 	void setVec4(const std::string &name, const glm::vec4 &value) const
 	{
 		glUniform4fv(glGetUniformLocation(ID, name.c_str()), 1, &value[0]);
@@ -164,7 +160,7 @@ public:
 	}
 
 private:
-	// utility function for checking shader compilation/linking errors.
+	
 	// ------------------------------------------------------------------------
 	void checkCompileErrors(GLuint shader, std::string type)
 	{
